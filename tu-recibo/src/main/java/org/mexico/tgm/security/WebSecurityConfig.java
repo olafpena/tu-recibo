@@ -16,11 +16,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    
     http
     .authorizeRequests()
-        .antMatchers("/resources/**").permitAll() 
-        .anyRequest().authenticated()
-        .and()
+    	.antMatchers("/greeting").authenticated()
+    	.antMatchers("/static/**").permitAll()
+    	.anyRequest().fullyAuthenticated()
+    	.and()
     .formLogin()
         .loginPage("/login")
+        .defaultSuccessUrl("/greeting", true)
         .permitAll()
         .and()
     .logout()                                    
