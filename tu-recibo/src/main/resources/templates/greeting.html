@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Getting Started: Serving Web Content</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<h2>Tu Recibo de nomina</h2>
+
+<table>
+  <tr>
+    <td>Año</td>
+    <td>  
+    <select id="annio">
+    <option th:each="i : ${#numbers.sequence(2000, 2021)}" th:value="${i}" th:text="${i}" 
+      th:selected="${i==2021}"></option>
+	</select>
+  
+  </td>
+  </tr>
+  <tr>
+    <td>Quincena</td>
+    <td> 
+    
+    <select id="quincena">
+    <option th:each="i : ${#numbers.sequence(1, 25)}" th:value="${i}" th:text="${i}" 
+      th:selected="${i==25}"></option>
+</select>
+
+  </td>
+  </tr>
+ 
+</table>
+
+</body>
+</html>
