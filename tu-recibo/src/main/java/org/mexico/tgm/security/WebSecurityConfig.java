@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(AuthenticationManagerBuilder auth) throws Exception {
-	  /**
+	 
     auth
       .ldapAuthentication()
         .userDnPatterns("uid={0},ou=people")
@@ -43,22 +43,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .passwordCompare()
           .passwordEncoder(new BCryptPasswordEncoder())
           .passwordAttribute("userPassword");
-**/
-	  
+
+/***	  
 	    auth
 	      .ldapAuthentication()
-	        .userDnPatterns("uid={0},ou=people")
+	        .userDnPatterns("uid={0}")
 	        .groupSearchBase("ou=groups")
 	        .contextSource()
 	          .url("ldap://192.168.0.1:389/dc=tgm,dc=com,dc=mx")
 	          .managerDn("administrador")
 	          .managerPassword("STIYCP@sw0rd19")
 	          .and()
-	          .userDnPatterns("uid={0}")
 	          .passwordCompare()
 	          .passwordEncoder(new BCryptPasswordEncoder())
 	          .passwordAttribute("userPassword");	  
-  
+ ***/ 
   }
   
 }

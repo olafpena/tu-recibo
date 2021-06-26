@@ -54,11 +54,12 @@
 			<groupId>com.unboundid</groupId>
 			<artifactId>unboundid-ldapsdk</artifactId>
 	</dependency>
-<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-vfs2 -->
-<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-vfs2</artifactId>
-    <version>2.8.0</version>
+	<dependency>
+	<groupId>org.codelibs</groupId>
+	<artifactId>jcifs</artifactId>
+	<version>2.1.26</version>
+	<scope>system</scope>
+	<systemPath>${basedir}/lib/jcifs-2.1.26.jar</systemPath>
 </dependency>
 
 	</dependencies>
