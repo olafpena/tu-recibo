@@ -50,11 +50,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	        .userDnPatterns("uid={0},ou=people")
 	        .groupSearchBase("ou=groups")
 	        .contextSource()
-	          .url("ldap://192.168.0.1:8389/dc=tgm,dc=com,dc=mx")
+	          .url("ldap://192.168.0.1:389/dc=tgm,dc=com,dc=mx")
 	          .managerDn("administrador")
 	          .managerPassword("STIYCP@sw0rd19")
 	          .and()
-	        .passwordCompare()
+	          .userDnPatterns("uid={0}")
+	          .passwordCompare()
 	          .passwordEncoder(new BCryptPasswordEncoder())
 	          .passwordAttribute("userPassword");	  
   
