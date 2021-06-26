@@ -6,13 +6,13 @@
 </head>
 <body>
 
-<h2>Tu Recibo de nomina</h2>
-
+<h2>Descarga tu Recibo de nomina</h2>
+        <form name="f" th:action="@{/recibo" method="post" th:object="${ruta}" >               
 <table>
   <tr>
     <td>Año</td>
     <td>  
-    <select id="annio">
+    <select id="annio" name="annio">
     <option th:each="i : ${#numbers.sequence(2000, 2021)}" th:value="${i}" th:text="${i}" 
       th:selected="${i==2021}"></option>
 	</select>
@@ -23,7 +23,7 @@
     <td>Quincena</td>
     <td> 
     
-    <select id="quincena">
+    <select id="quincena" name="quincena">
     <option th:each="i : ${#numbers.sequence(1, 25)}" th:value="${i}" th:text="${i}" 
       th:selected="${i==25}"></option>
 </select>
@@ -32,6 +32,10 @@
   </tr>
  
 </table>
+	<p><button type="submit" th:name="action" th:value="buscar">Buscar</button></p>
+    
+
+</form>
     <p><a href="/logout">Salir</a></p>
 </body>
 </html>

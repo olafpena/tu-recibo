@@ -16,13 +16,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    
     http
     .authorizeRequests()
-    	.antMatchers("/greeting").authenticated()
+    	.antMatchers("/recibo").authenticated()
     	.antMatchers("/static/**").permitAll()
     	.anyRequest().fullyAuthenticated()
     	.and()
     .formLogin()
         .loginPage("/login")
-        .defaultSuccessUrl("/greeting", true)
+        .defaultSuccessUrl("/recibo", true)
         .permitAll()
         .and()
     .logout()                                    
@@ -32,6 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(AuthenticationManagerBuilder auth) throws Exception {
+	  /**
     auth
       .ldapAuthentication()
         .userDnPatterns("uid={0},ou=people")
@@ -42,6 +43,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .passwordCompare()
           .passwordEncoder(new BCryptPasswordEncoder())
           .passwordAttribute("userPassword");
+**/
+	  
+	    auth
+	      .ldapAuthentication()
+	        .userDnPatterns("uid={0},ou=people")
+	        .groupSearchBase("ou=groups")
+	        .contextSource()
+	          .url("ldap://192.168.0.1:8389/dc=tgm,dc=com,dc=mx")
+	          .managerDn("administrador")
+	          .managerPassword("STIYCP@sw0rd19")
+	          .and()
+	        .passwordCompare()
+	          .passwordEncoder(new BCryptPasswordEncoder())
+	          .passwordAttribute("userPassword");	  
+  
   }
-
+  
 }
