@@ -50,10 +50,12 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-ldap</artifactId>
 	</dependency>
+	<!-- 
 	<dependency>
 			<groupId>com.unboundid</groupId>
 			<artifactId>unboundid-ldapsdk</artifactId>
 	</dependency>
+	 -->
 	<dependency>
 	<groupId>org.codelibs</groupId>
 	<artifactId>jcifs</artifactId>
