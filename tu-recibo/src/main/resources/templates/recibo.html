@@ -13,7 +13,7 @@
   <tr>
     <td>Año</td>
     <td>  
-    <select id="annio" name="annio">
+    <select id="annio" name="annio" th:onchange="'window.location.href = \'' + @{/recibo} + '?annio=\' + this.value ' ">
     <option th:each="i : ${#numbers.sequence(2000, 2021)}" th:value="${i}" th:text="${i}" 
       th:selected="${i==2021}"></option>
 	</select>

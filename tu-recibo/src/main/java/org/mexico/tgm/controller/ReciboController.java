@@ -1,14 +1,16 @@
 package org.mexico.tgm.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
+import javax.websocket.server.PathParam;
 
 import org.mexico.tgm.model.CustomLdapUserDetails;
 import org.mexico.tgm.model.Ruta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +26,17 @@ public class ReciboController {
 	private static Logger logger = LoggerFactory.getLogger(ReciboController.class);
 
 	@GetMapping("/recibo")
-	public String recibo(Model model) {
+	public String recibo(Model model, @PathParam("annio") String annio) {
+		if(annio==null) {
+			Calendar calendar = Calendar.getInstance();
+			 annio = String.valueOf(calendar.get(Calendar.YEAR));			
+		}
+
+		
 		CustomLdapUserDetails userDetails = (CustomLdapUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		model.addAttribute("userName", userDetails.getUsername().toUpperCase());
-		
-		model.addAttribute("recibos", listFilesWindows("smb:\\\\192.168.0.29\\Usuarios\\STI\\Comprobantes Nomina\\2020\\", userDetails.getNumeroEmpleado()));
+
+		model.addAttribute("recibos", listFilesWindows("smb:\\\\192.168.0.29\\Usuarios\\STI\\Comprobantes Nomina\\"+annio+"\\", userDetails.getNumeroEmpleado()));
 		logger.info("Inicio de sesion usuario:" + userDetails.getUsername());
 
 		return "recibo";
