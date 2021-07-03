@@ -8,12 +8,12 @@ import org.mexico.tgm.model.CustomLdapUserDetails;
 import org.mexico.tgm.model.Ruta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jcifs.smb1.smb1.NtlmPasswordAuthentication;
@@ -22,6 +22,9 @@ import jcifs.smb1.smb1.SmbFile;
 @Controller
 public class ReciboController {
 
+	@Autowired
+	private Environment env;
+	
 	private static Logger logger = LoggerFactory.getLogger(ReciboController.class);
 	
 	private String annio;
@@ -39,30 +42,22 @@ public class ReciboController {
 		model.addAttribute("userName", userDetails.getUsername().toUpperCase());
 		model.addAttribute("year",this.annio);
 
-		model.addAttribute("recibos", listFilesWindows("smb:\\\\192.168.0.29\\Usuarios\\STI\\Comprobantes Nomina\\"+this.annio+"\\", userDetails.getNumeroEmpleado()));
-		logger.info("Inicio de sesion usuario:" + userDetails.getUsername());
-
-		return "recibo";
-	}
-
-	@PostMapping("/recibo")
-	public String postRecibo(@ModelAttribute Ruta ruta, Model model) {
-		model.addAttribute("ruta", ruta);
+		// 
+		String ruta = env.getProperty("mx.com.tgm.ruta").replace("/", "\\");
+		logger.info("ruta escapada={}",ruta);
+		model.addAttribute("recibos", listFilesWindows(ruta+this.annio+"\\", userDetails.getNumeroEmpleado()));
+		logger.info("Inicio de sesion usuario={}",userDetails.getUsername());
 
 		return "recibo";
 	}
 
 
 	private List<Ruta> listFilesWindows(String shareDirectory,String idEmpleado) {
-		long startTime = System.currentTimeMillis();
 		List<Ruta> nameFileList = new ArrayList<Ruta>();
 		try {
-			// Domain server verification
 			NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication("tgm.com.mx", "garias", "buendia34");
 			SmbFile remoteFile = new SmbFile(shareDirectory,
-					"smb://192.168.0.29/Usuarios/STI/Comprobantes Nomina/"+this.annio+ "/", auth);
-			System.out.print(
-					"Remote shared directory access time-consuming: [{}]" + (System.currentTimeMillis() - startTime));
+					env.getProperty("mx.com.tgm.ruta")+this.annio+ "/", auth);
 			if (remoteFile.exists() && 	remoteFile.isDirectory()) {
 				SmbFile[] quincenaFolders = remoteFile.listFiles();
 				for (int i = 0; i<quincenaFolders.length; i++ ) {
@@ -75,14 +70,12 @@ public class ReciboController {
 								int initIndex = recibo.getName().lastIndexOf("_");
 								if (initIndex > 1) {
 									String lastFileName = recibo.getName().substring(initIndex);
-									//System.out.println( "FileName= "+ recibo.getCanonicalPath());
 									if(lastFileName.contains("_"+idEmpleado+".")) {
 										Ruta ruta = new Ruta();
 										ruta.setNombreRecibo(recibo.getName());
 										ruta.setRutaRecibo(recibo.getCanonicalPath());
 										nameFileList.add(ruta);
-										System.out.println( "FileName= "+ recibo.getCanonicalPath());
-										
+										logger.info("Found FileName={}", recibo.getCanonicalPath());										
 									}									
 								}
 							}
@@ -91,12 +84,13 @@ public class ReciboController {
 				}
 
 			} else {
-				System.out.print("File does not exist");
+				logger.info("No se encontraro archivos para el empleado={}", idEmpleado);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info("Error al buscare archivos para el empleado={}, error={}", idEmpleado,e);
 			e.printStackTrace();
 		}
+		logger.info("Archivos encontrados={} para el empleado={}", nameFileList.size(), idEmpleado);
 		return nameFileList;
 	}	
 
