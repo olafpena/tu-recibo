@@ -1,6 +1,8 @@
 package org.mexico.tgm.model;
 
-public class Ruta {
+import java.io.Serializable;
+
+public class Ruta implements Serializable {
 	
 	private String annio;
 	private String quincena;

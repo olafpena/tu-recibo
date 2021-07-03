@@ -1,12 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head> 
-    <title>Getting Started: Serving Web Content</title> 
+    <title>Recibos de Nomina TGM</title> 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    
 </head>
 <body>
 
-<h2>Descarga tu Recibo de nomina</h2>
+<h2>Descarga tu Recibo de nomina     <span th:text="${userName}" /></h2>
 <table>
   <tr>
     <td>Año</td>
@@ -35,8 +37,8 @@
 <h2>Recibos</h2>
 
 <table>
-<tr th:each="ruta: ${ruta}">
-    <td th:text="${ruta.nombreRecibo}" />
+<tr th:each="recibo: ${recibos}">
+    <td th:text="${recibo.nombreRecibo}" />
 </tr>
 </table>
 

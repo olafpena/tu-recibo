@@ -25,8 +25,8 @@ public class ReciboController {
 	@GetMapping("/recibo")
 	public String recibo(Model model) {
 		UserDetails ud = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		model.addAttribute("name", ud.getUsername());
-		model.addAttribute("ruta", listFilesWindows("smb:\\\\192.168.0.29\\Usuarios\\STI\\Comprobantes Nomina\\2020\\", "79"));
+		model.addAttribute("userName", ud.getUsername().toUpperCase());
+		model.addAttribute("recibos", listFilesWindows("smb:\\\\192.168.0.29\\Usuarios\\STI\\Comprobantes Nomina\\2020\\", "1179"));
 		logger.info("Inicio de sesion usuario:" + ud.getUsername());
 
 		return "recibo";
@@ -63,10 +63,11 @@ public class ReciboController {
 								if (initIndex > 1) {
 									String lastFileName = recibo.getName().substring(initIndex);
 									//System.out.println( "FileName= "+ recibo.getCanonicalPath());
-									if(lastFileName.contains(idEmpleado)) {
+									if(lastFileName.contains("_"+idEmpleado+".")) {
 										Ruta ruta = new Ruta();
 										ruta.setNombreRecibo(recibo.getName());
 										ruta.setRutaRecibo(recibo.getCanonicalPath());
+										nameFileList.add(ruta);
 										System.out.println( "FileName= "+ recibo.getCanonicalPath());
 										
 									}									
@@ -88,7 +89,7 @@ public class ReciboController {
 
 	public static void main(String[] args) {
 		ReciboController r = new ReciboController();
-		r.listFilesWindows("smb:\\\\192.168.0.29\\Usuarios\\STI\\Comprobantes Nomina\\2020\\", "79");
+		r.listFilesWindows("smb:\\\\192.168.0.29\\Usuarios\\STI\\Comprobantes Nomina\\2020\\", "1179");
 
 	}
 }
