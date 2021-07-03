@@ -3,6 +3,7 @@ package org.mexico.tgm.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mexico.tgm.model.CustomLdapUserDetails;
 import org.mexico.tgm.model.Ruta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,11 @@ public class ReciboController {
 
 	@GetMapping("/recibo")
 	public String recibo(Model model) {
-		UserDetails ud = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		model.addAttribute("userName", ud.getUsername().toUpperCase());
-		model.addAttribute("recibos", listFilesWindows("smb:\\\\192.168.0.29\\Usuarios\\STI\\Comprobantes Nomina\\2020\\", "1179"));
-		logger.info("Inicio de sesion usuario:" + ud.getUsername());
+		CustomLdapUserDetails userDetails = (CustomLdapUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		model.addAttribute("userName", userDetails.getUsername().toUpperCase());
+		
+		model.addAttribute("recibos", listFilesWindows("smb:\\\\192.168.0.29\\Usuarios\\STI\\Comprobantes Nomina\\2020\\", userDetails.getNumeroEmpleado()));
+		logger.info("Inicio de sesion usuario:" + userDetails.getUsername());
 
 		return "recibo";
 	}
