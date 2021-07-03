@@ -38,7 +38,9 @@
 
 <table>
 <tr th:each="recibo: ${recibos}">
-    <td th:text="${recibo.nombreRecibo}" />
+    <td th:text="${recibo.nombreRecibo}">
+	<a th:href="@{'/downloadFile?fileName=' + ${recibo.rutaRecibo}}"></a>
+    </td>
 </tr>
 </table>
 

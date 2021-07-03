@@ -1,8 +1,13 @@
 package org.mexico.tgm.controller;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.mexico.tgm.model.CustomLdapUserDetails;
 import org.mexico.tgm.model.Ruta;
@@ -42,7 +47,6 @@ public class ReciboController {
 		model.addAttribute("userName", userDetails.getUsername().toUpperCase());
 		model.addAttribute("year",this.annio);
 
-		// 
 		String ruta = env.getProperty("mx.com.tgm.ruta").replace("/", "\\");
 		logger.info("ruta escapada={}",ruta);
 		model.addAttribute("recibos", listFilesWindows(ruta+this.annio+"\\", userDetails.getNumeroEmpleado()));
@@ -52,6 +56,32 @@ public class ReciboController {
 	}
 
 
+	@GetMapping("/downloadFile")
+	public void getSteamingFile(HttpServletResponse response, @RequestParam(name = "fileName",required = false) String fileName) throws IOException {
+		
+	response.setContentType("application/pdf");
+	response.setHeader("Content-Disposition", "attachment; filename=\""+fileName+"\"");
+	InputStream inputStream = getFile(fileName);
+	   int nRead;
+	   while ((nRead = inputStream.read()) != -1) {
+	       response.getWriter().write(nRead);
+	   }
+	}
+	
+	
+	private InputStream getFile(String fileName ) {
+		SmbFile remoteFile = null;
+		try{
+
+			NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication("tgm.com.mx", "garias", "buendia34");
+			remoteFile = new SmbFile(fileName, auth);		
+			return remoteFile.getInputStream();					
+		}catch(Exception e) {
+			logger.info("Error ar abrir archivo={}", fileName);
+		}
+		return null;
+	}
+	
 	private List<Ruta> listFilesWindows(String shareDirectory,String idEmpleado) {
 		List<Ruta> nameFileList = new ArrayList<Ruta>();
 		try {
