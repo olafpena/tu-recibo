@@ -5,6 +5,7 @@ public class Ruta {
 	private String annio;
 	private String quincena;
 	private String nombreRecibo;
+	private String rutaRecibo;
 	
 	public String getAnnio() {
 		return annio;
@@ -23,6 +24,12 @@ public class Ruta {
 	}
 	public void setNombreRecibo(String nombreRecibo) {
 		this.nombreRecibo = nombreRecibo;
+	}
+	public String getRutaRecibo() {
+		return rutaRecibo;
+	}
+	public void setRutaRecibo(String rutaRecibo) {
+		this.rutaRecibo = rutaRecibo;
 	}
 	
 
